@@ -445,7 +445,8 @@ export default function BrowserTerminal() {
     let mounted = true;
     (async () => {
       try {
-        const initSqlJs = (await import("sql.js")).default;
+        //const initSqlJs = (await import("sql.js")).default;
+        const initSqlJs = (await import("sql.js") as any).default;
         const SQL = await initSqlJs({
           locateFile: (file: string) => (file.endsWith(".wasm") ? SQLITE_WASM_PATH : `/${file}`),
         });
@@ -717,7 +718,7 @@ export default function BrowserTerminal() {
               const cols = rows[0].columns;
               for (const values of rows[0].values) {
                 const escaped = values.map((v: any) => (v === null || v === undefined ? "NULL" : `'${String(v).replace(/'/g, "''")}'`));
-                dump.push(`INSERT INTO \"${tableName}\" (${cols.map((c) => `\"${c}\"`).join(", ")}) VALUES (${escaped.join(", ")});`);
+                dump.push(`INSERT INTO \"${tableName}\" (${cols.map((c: string) => `\"${c}\"`).join(", ")}) VALUES (${escaped.join(", ")});`);
               }
             }
           }
